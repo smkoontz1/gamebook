@@ -6,17 +6,20 @@ import { useSearchPlatforms } from '../hooks/igdb/useSearchPlatforms'
 import { StatusBar } from 'expo-status-bar'
 import { Alert, Platform as HostPlatform } from 'react-native'
 import { useMutation } from '@tanstack/react-query'
-import { addPlatform } from '../storage/platforms'
 import { Platform } from '../types/platforms/Platform'
 import { PlatformsScreenProps } from '../types/navigation'
-import { useStorageContext } from '../hooks/contexts/useStorageContext'
-import { StoredPlatforms } from '../types/storage/platforms/StoredPlatforms'
 import { LoadingSpinner } from '../components/Common/LoadingSpinner'
+import { PlatformState } from '../types/state/PlatformStore'
+import { usePlatformStore } from '../hooks/stores/usePlatformStore'
 
 export default function AddPlatformModalScreen({ navigation }: PlatformsScreenProps<'AddPlatformModal'>) {
   const [searchText, setSearchText] = useState('')
   const [queryText, setQueryText] = useState('')
-  const { storage, setNewStorage } = useStorageContext()
+  const { addPlatform } = usePlatformStore()
+
+  const addPlatformMutation = useMutation<PlatformState, unknown, number, unknown>(platformId => {
+    return addPlatform(platformId)
+  })
 
   const {
     isFetching: arePlatformsFetching,
@@ -24,10 +27,6 @@ export default function AddPlatformModalScreen({ navigation }: PlatformsScreenPr
     error: platformsError,
     data: platforms
   } = useSearchPlatforms({ searchText: queryText })
-  
-  const addPlatformMutation = useMutation<StoredPlatforms, unknown, number>(platformIgdbId => {
-    return addPlatform(platformIgdbId)
-  })
 
   const showAlert = (platform: Platform) => {
     Alert.alert(
@@ -41,18 +40,8 @@ export default function AddPlatformModalScreen({ navigation }: PlatformsScreenPr
         {
           text: 'OK',
           onPress: async () => {
-            const newPlatforms = await addPlatformMutation.mutateAsync(platform.igdbId)
-            
-            console.log('Modal new platforms', newPlatforms)
-
-            if (newPlatforms) {
-              console.log('Setting new storage')
-              setNewStorage({
-                ...storage,
-                platforms: newPlatforms
-              })
-              navigation.navigate('PlatformsList', { storedPlatforms: newPlatforms })
-            }
+            addPlatformMutation.mutate(platform.igdbId)
+            navigation.navigate('PlatformsList')
           }
         }
       ]

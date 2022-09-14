@@ -1,5 +1,4 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
-import { PlatformResponse } from '../../types/igdb/responses/PlatformResponse'
 import { getPlatformLogos, searchPlatforms } from '../../igdb/igdbApi'
 import { Platform } from '../../types/platforms/Platform'
 
@@ -10,10 +9,6 @@ interface Props {
 
 export const useSearchPlatforms = (props: Props): UseQueryResult<Platform[]> => {
   const { searchText } = props
-  
-  console.log('Search text is', searchText)
-
-  
   
   return useQuery(['platforms', searchText], async (): Promise<Platform[]> => {
     const platformResponses = await searchPlatforms(searchText)

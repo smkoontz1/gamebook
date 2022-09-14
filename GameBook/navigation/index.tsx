@@ -5,14 +5,12 @@
  */
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, DefaultTheme, DarkTheme, NavigatorScreenParams } from '@react-navigation/native';
-import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
-import { useStorageContext } from '../hooks/contexts/useStorageContext';
-import { useStoredPlatformIgdbIds } from '../hooks/storage/useStoredPlatformIgdbIds';
 import useColorScheme from '../hooks/useColorScheme';
 import AddPlatformModalScreen from '../screens/AddPlatformModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
@@ -86,27 +84,12 @@ const PlatformsStack = createNativeStackNavigator<PlatformsStackParamList>()
 
 function PlatformsNavigator() {
   const colorScheme = useColorScheme()
-  const { storage, setNewStorage } = useStorageContext()
-
-  const {
-    data: storedPlatformIgdbIds,
-    isLoading: areStoredPlatformsLoading
-  } = useStoredPlatformIgdbIds()
-
-  React.useEffect(() => {
-    storedPlatformIgdbIds && setNewStorage({
-      platforms: {
-        platformIgdbIds: storedPlatformIgdbIds
-      }
-    })
-  }, [areStoredPlatformsLoading])
   
   return (
     <PlatformsStack.Navigator>
       <PlatformsStack.Screen
         name='PlatformsList'
         component={PlatformsListScreen}
-        initialParams={{ storedPlatforms: storage?.platforms }}
         options={({ navigation }: PlatformsScreenProps<'PlatformsList'>) => ({
           title: 'Platforms',
           headerRight: () => (

@@ -6,7 +6,6 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StoredPlatforms } from '../storage/platforms/StoredPlatforms';
 
 declare global {
   namespace ReactNavigation {
@@ -30,7 +29,7 @@ export type RootTabParamList = {
 };
 
 export type PlatformsStackParamList = {
-  PlatformsList: { storedPlatforms: StoredPlatforms };
+  PlatformsList: undefined;
   AddPlatformModal: undefined;
 }
 
