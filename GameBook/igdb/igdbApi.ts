@@ -11,9 +11,10 @@ export async function getPlatforms(platformIdgbIds: number[]): Promise<PlatformR
     'category',
     'generation',
     'name',
-    'platform_logo',
     'platform_family',
-    'slug'
+    'platform_logo',
+    'slug',
+    'summary'
   ]
   
   const requestBody = `
@@ -37,6 +38,10 @@ export async function getPlatforms(platformIdgbIds: number[]): Promise<PlatformR
 }
 
 export async function getPlatformLogos(platformLogoIgdbIds: number[]): Promise<PlatformLogoResponse[]> {
+  if (platformLogoIgdbIds.length <= 0) {
+    return []
+  }
+  
   const QUERY_FIELDS = [
     'id',
     'alpha_channel',
@@ -85,6 +90,8 @@ export async function searchPlatforms(searchText: string): Promise<PlatformRespo
     fields ${QUERY_FIELDS.join(',')};
     limit 20;
   `
+
+  console.log('Searching', requestBody)
 
   const response = await axios.post<PlatformResponse[]>(
     '/platforms',

@@ -12,9 +12,10 @@ import { ColorSchemeName, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import AddPlatformModalScreen from '../screens/AddPlatformModalScreen';
+import AddPlatformModalScreen from '../screens/platforms/AddPlatformModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import PlatformsListScreen from '../screens/PlatformsListScreen';
+import PlatformsListScreen from '../screens/platforms/PlatformsListScreen';
+import PlatformDetailsModalScreen from '../screens/platforms/PlatformDetailsModalScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { PlatformsScreenProps, PlatformsStackParamList, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types/navigation';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -109,6 +110,13 @@ function PlatformsNavigator() {
         })}
       />
       <PlatformsStack.Group screenOptions={{ presentation: 'modal' }}>
+        <PlatformsStack.Screen
+          name='PlatformDetailsModal'
+          component={PlatformDetailsModalScreen}
+          options={({ route }: PlatformsScreenProps<'PlatformDetailsModal'>) => ({
+            title: route.params.platform.name,
+          })}
+        />
         <PlatformsStack.Screen
           name='AddPlatformModal'
           component={AddPlatformModalScreen}

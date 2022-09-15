@@ -1,6 +1,6 @@
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
-import { PlatformStore } from '../../types/state/PlatformStore'
+import { PlatformState, PlatformStore } from '../../types/state/PlatformStore'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const ASYNC_STORAGE_KEYS = {
@@ -22,16 +22,30 @@ export const usePlatformStore = create<PlatformStore, [['zustand/persist', Platf
       addPlatform: async (newPlatformIgdbId) => {
         const platformState = get().platformState
 
-        set({
-          platformState: {
-            ...platformState,
-            platformIgdbIds: [
-              ...platformState?.platformIgdbIds,
-              newPlatformIgdbId]
-          }
-        })
+        const newPlatformState: PlatformState = {
+          ...platformState,
+          platformIgdbIds: [
+            ...platformState?.platformIgdbIds,
+            newPlatformIgdbId
+          ]
+        }
 
-        return platformState
+        set({ platformState: newPlatformState })
+
+        return newPlatformState
+      },
+      deletePlatform: async (platformIgdbId) => {
+        const platformState = get().platformState
+
+        const newPlatformIgdbIds = platformState?.platformIgdbIds?.filter(id => id !== platformIgdbId) || []
+        const newPlatformState: PlatformState = {
+          ...platformState,
+          platformIgdbIds: newPlatformIgdbIds
+        }
+
+        set({ platformState: newPlatformState })
+
+        return newPlatformState
       }
     }),
     {

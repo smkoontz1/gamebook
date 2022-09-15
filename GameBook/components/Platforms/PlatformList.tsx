@@ -1,30 +1,24 @@
-import { SectionList, ListRenderItem, Text, Pressable, View, StyleSheet } from 'react-native'
+import { SectionList, ListRenderItem, Text, View, StyleSheet } from 'react-native'
 import { Platform } from '../../types/platforms/Platform'
 import { PlatformListItem } from './PlatformListItem'
-import { MenuSeparator } from '../Common/MenuSeparator'
 
 interface Props {
   platforms: Platform[] | undefined
-  onPressed?: (platform: Platform) => void
+  onPlatformPressed?: (platform: Platform) => void
 }
 
 export const PlatformList = (props: Props) => {
-  const {
-    platforms,
-    onPressed
-  } = props
+  const { platforms, onPlatformPressed } = props
 
   const renderPlatformMenuItem: ListRenderItem<Platform> = ({ item }: { item: Platform }) => {
     return (
-      <Pressable onPress={() => onPressed && onPressed(item)}>
-        <PlatformListItem platform={item} />
-      </Pressable>
+      <PlatformListItem platform={item} onPressed={onPlatformPressed} />
     )
   }
 
   return (
     <>
-      {platforms
+      {platforms && platforms?.length > 0
       ? <SectionList
           sections={[{ title: 'Platforms', data: platforms.sort((a, b) => { 
             if (a.name < b.name) {
@@ -38,7 +32,6 @@ export const PlatformList = (props: Props) => {
             return 0
           })}]}
           renderItem={renderPlatformMenuItem}
-          ItemSeparatorComponent={MenuSeparator}
           keyExtractor={item => item.igdbId.toString()}
         />
       : <View style={styles.textContainer}>
@@ -52,6 +45,6 @@ export const PlatformList = (props: Props) => {
 const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
   },
 })

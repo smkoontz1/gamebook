@@ -17,7 +17,8 @@ const linking: LinkingOptions<RootStackParamList> = {
         screens: {
           Platforms: {
             screens: {
-              AddPlatformModal: 'add-platform'
+              AddPlatformModal: 'add-platform',
+              PlatformDetailsModal: 'platform-details', 
             },
           },
           TabTwo: {

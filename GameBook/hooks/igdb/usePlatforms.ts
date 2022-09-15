@@ -10,7 +10,6 @@ export const usePlatforms = (props: Props): UseQueryResult<Platform[]> => {
   const { platformIdgbIds } = props
   
   return useQuery(['platforms', platformIdgbIds], async (): Promise<Platform[]> => {
-    console.log('Getting platforms with', platformIdgbIds)
     const platformResponses = await getPlatforms(platformIdgbIds)
     const platformLogoResponses = await getPlatformLogos(platformResponses.map(pr => pr.platform_logo).filter(id => !!id))
 
@@ -18,7 +17,12 @@ export const usePlatforms = (props: Props): UseQueryResult<Platform[]> => {
       return {
         igdbId: pr.id,
         name: pr.name,
-        logoImgId: platformLogoResponses?.find(plr => plr.id === pr.platform_logo)?.image_id || ''
+        logoImgId: platformLogoResponses?.find(plr => plr.id === pr.platform_logo)?.image_id || '',
+        details: {
+          category: pr.category,
+          generation: pr.generation,
+          summary: pr.summary
+        }
       }
     })
   },

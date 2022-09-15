@@ -8,4 +8,5 @@ export interface PlatformStore {
   setPlatformStateHydrated: () => void
   platformState: PlatformState,
   addPlatform: (newPlatformIgdbId: number) => Promise<PlatformState>
+  deletePlatform: (platformIdbId: number) => Promise<PlatformState>
 }

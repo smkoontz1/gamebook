@@ -1,32 +1,34 @@
 import { useState } from 'react'
 import { ActivityIndicator, StyleSheet, View, Text, TextInput, NativeSyntheticEvent, TextInputSubmitEditingEventData, DrawerLayoutAndroidComponent } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { PlatformList } from '../components/Platforms/PlatformList'
-import { useSearchPlatforms } from '../hooks/igdb/useSearchPlatforms'
+import { PlatformList } from '../../components/Platforms/PlatformList'
+import { useSearchPlatforms } from '../../hooks/igdb/useSearchPlatforms'
 import { StatusBar } from 'expo-status-bar'
 import { Alert, Platform as HostPlatform } from 'react-native'
 import { useMutation } from '@tanstack/react-query'
-import { Platform } from '../types/platforms/Platform'
-import { PlatformsScreenProps } from '../types/navigation'
-import { LoadingSpinner } from '../components/Common/LoadingSpinner'
-import { PlatformState } from '../types/state/PlatformStore'
-import { usePlatformStore } from '../hooks/stores/usePlatformStore'
+import { Platform } from '../../types/platforms/Platform'
+import { PlatformsScreenProps } from '../../types/navigation'
+import { LoadingSpinner } from '../../components/Common/LoadingSpinner'
+import { PlatformState } from '../../types/state/PlatformStore'
+import { usePlatformStore } from '../../hooks/stores/usePlatformStore'
+import colors from '../../constants/Colors'
+import { FontAwesome } from '@expo/vector-icons'
 
 export default function AddPlatformModalScreen({ navigation }: PlatformsScreenProps<'AddPlatformModal'>) {
   const [searchText, setSearchText] = useState('')
   const [queryText, setQueryText] = useState('')
   const { addPlatform } = usePlatformStore()
-
-  const addPlatformMutation = useMutation<PlatformState, unknown, number, unknown>(platformId => {
-    return addPlatform(platformId)
-  })
-
+  
   const {
     isFetching: arePlatformsFetching,
     isError: isPlatformsError,
     error: platformsError,
     data: platforms
   } = useSearchPlatforms({ searchText: queryText })
+  
+  const addPlatformMutation = useMutation<PlatformState, unknown, number, unknown>(platformIgdbId => {
+    return addPlatform(platformIgdbId)
+  })
 
   const showAlert = (platform: Platform) => {
     Alert.alert(
@@ -55,6 +57,12 @@ export default function AddPlatformModalScreen({ navigation }: PlatformsScreenPr
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputContainer}>
+        <FontAwesome
+          name='search'
+          size={25}
+          color={'black'}
+          style={styles.searchIcon}
+        />
         <TextInput
           style={styles.input}
           onChangeText={(t) => setSearchText(t)}
@@ -66,7 +74,7 @@ export default function AddPlatformModalScreen({ navigation }: PlatformsScreenPr
         ? <LoadingSpinner />
         : <PlatformList
             platforms={platforms}
-            onPressed={showAlert}
+            onPlatformPressed={showAlert}
           />
       }
 
@@ -79,17 +87,25 @@ export default function AddPlatformModalScreen({ navigation }: PlatformsScreenPr
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 20,
+    backgroundColor: colors.appBackground
   },
   inputContainer: {
     flexDirection: 'row',
-    justifyContent: 'center'
+    alignItems: 'center',
+    marginBottom: 20
+  },
+  searchIcon: {
+    flex: 1,
   },
   input: {
+    flex: 8,
     height: 40,
-    width: '80%',
+    width: '100%',
     marginTop: 12,
     marginBottom: 20,
-    borderWidth: 1,
-    padding: 10
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 10,
   }
 })

@@ -5,7 +5,8 @@ export interface PlatformResponse {
   category: number,
   generation: number,
   name: string,
-  platform_logo: number,
   platform_family: number,
-  slug: string
+  platform_logo: number,
+  slug: string,
+  summary: string,
 }
