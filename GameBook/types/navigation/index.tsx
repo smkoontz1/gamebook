@@ -16,6 +16,7 @@ declare global {
 
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
+  Games: NavigatorScreenParams<GamesStackParamList> | undefined;
   NotFound: undefined;
 };
 
@@ -29,6 +30,24 @@ export type RootTabParamList = {
   TabTwo: undefined;
 };
 
+export type GamesStackParamList = {
+  GamesList: {
+    platformIgdbId?: number
+    platformSlug: string
+    platformName?: string
+  }
+  AddGameModal: {
+    platformIgdbId?: number
+    platformSlug: string
+    platformName?: string
+  }
+}
+
+export type GamesScreenProps<Screen extends keyof GamesStackParamList> = NativeStackScreenProps<
+  GamesStackParamList,
+  Screen
+>
+
 export type PlatformsStackParamList = {
   PlatformsList: undefined;
   PlatformDetailsModal: { platform: Platform }
@@ -39,6 +58,21 @@ export type PlatformsScreenProps<Screen extends keyof PlatformsStackParamList> =
   PlatformsStackParamList,
   Screen
 >
+
+// export type PlatformDetailsModalScreenProps = NativeStackScreenProps<
+//   PlatformsStackParamList,
+//   'PlatformDetailsModal'
+// >
+
+export type PlatformDetailsModalScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<PlatformsStackParamList, 'PlatformDetailsModal'>,
+  NativeStackScreenProps<RootStackParamList, 'Games'>
+>
+
+// export type PlatformsScreenProps<Screen extends keyof PlatformsStackParamList> = CompositeScreenProps<
+//   NativeStackScreenProps<PlatformsStackParamList, Screen>,
+//   GamesScreenProps<GamesStackParamList>
+// >
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<
   BottomTabScreenProps<RootTabParamList, Screen>,

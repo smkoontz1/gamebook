@@ -15,6 +15,7 @@ interface PlatformDetails {
 
 export interface Platform {
   igdbId: number,
+  slug: string,
   name: string,
   logoImgId?: string,
   details?: PlatformDetails

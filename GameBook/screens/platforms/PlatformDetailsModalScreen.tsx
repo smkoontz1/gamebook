@@ -1,13 +1,15 @@
-import { PlatformsScreenProps } from '../../types/navigation'
+import { PlatformDetailsModalScreenProps, PlatformsScreenProps } from '../../types/navigation'
 import { Alert, Platform as HostPlatform, StyleSheet, View, Text, Image, Pressable, FlatList, ListRenderItem } from 'react-native'
-import { getPlatformDetailsImgLogoUrl } from '../../helpers/imageHelpers'
-import { Button } from '@rneui/themed'
+import { getImageSize, getPlatformDetailsImgLogoUrl } from '../../helpers/imageHelpers'
 import { Category, Platform } from '../../types/platforms/Platform'
 import { LabeledList } from '../../components/Common/LabeledList'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useMutation } from '@tanstack/react-query'
 import { PlatformState } from '../../types/state/PlatformStore'
 import { usePlatformStore } from '../../hooks/stores/usePlatformStore'
+import { Button, Card, Paragraph } from 'react-native-paper'
+import { useState } from 'react'
+import { FontAwesome } from '@expo/vector-icons'
 
 const getCategoryString = (category: Category) => {
   switch (category) {
@@ -33,7 +35,7 @@ interface KeyValuePair<TKey, TValue> {
   value: TValue
 }
 
-export default function PlatformDetailsModalScreen({ route, navigation }: PlatformsScreenProps<'PlatformDetailsModal'>) {
+export default function PlatformDetailsModalScreen({ route, navigation }: PlatformDetailsModalScreenProps) {
   const { platform } = route.params
   const { details } = platform
   const { deletePlatform } = usePlatformStore()
@@ -62,10 +64,10 @@ export default function PlatformDetailsModalScreen({ route, navigation }: Platfo
       ]
     )
   }
-
+  
   // TODO
   const gamesOwned = 24
-
+  
   const keyValuePairs: KeyValuePair<string, string>[] = [
     {
       key: 'Category',
@@ -79,32 +81,66 @@ export default function PlatformDetailsModalScreen({ route, navigation }: Platfo
       key: 'Games Owned',
       value: gamesOwned.toString()
     }
+  
   ]
+
+  const platformDetailsImgLogoUrl = getPlatformDetailsImgLogoUrl(platform.logoImgId || '')
+
+  const [platformLogoDimensions, setPlatformLogoDimensions] = useState({ width: 1, height: 1 })
+
+  platform.logoImgId && Image.getSize(
+    platformDetailsImgLogoUrl,
+    (width, height) => setPlatformLogoDimensions({ width, height }),
+    () => console.error('Error getting platform logo dimensions'))
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image
-        style={styles.logo}
-        source={{
-          uri: getPlatformDetailsImgLogoUrl(platform.logoImgId || '')
-        }}
-      />
-
-      <LabeledList keyValuePairs={keyValuePairs}/>
-      
-      <View style={styles.buttonsContainer}>
-        <Button
-          title={'View Games'}
-          size='lg'
-          style={styles.button}
-        />
-        <Button
-          title={'Remove Platform'}
-          size='lg'
-          style={styles.button}
-          onPress={() => showRemoveAlert(platform)}
-        />
-      </View>
+      <Card style={styles.card}>
+        <View style={styles.logoContainer}>
+          {platform.logoImgId
+            ? <Card.Cover
+                style={{
+                  width: '100%',
+                  height: undefined,
+                  aspectRatio: platformLogoDimensions.width / platformLogoDimensions.height,
+                  backgroundColor: 'white'
+                }}
+                source={{ uri: getPlatformDetailsImgLogoUrl(platform.logoImgId || '') }}
+              />
+            : <FontAwesome
+                name='gamepad'
+                size={150}
+                style={{ color: 'darkslategray' }}
+              />}
+        </View>
+        <Card.Content>
+          <LabeledList keyValuePairs={keyValuePairs} />
+        </Card.Content>
+        <Card.Actions style={styles.cardActions}>
+          <Button
+            mode='contained'
+            onPress={() => {
+              navigation.goBack()
+              navigation.navigate('Games', {
+                screen: 'GamesList',
+                params: { 
+                  platformIgdbId: platform.igdbId,
+                  platformSlug: platform.slug,
+                  platformName: platform.name
+                } 
+              })
+            }}
+          >
+            View Games
+          </Button>
+          <Button
+            mode='outlined'
+            onPress={() => showRemoveAlert(platform)}
+          >
+            Remove Platform
+          </Button>
+        </Card.Actions>
+      </Card>
     </SafeAreaView>
   )
 }
@@ -112,36 +148,22 @@ export default function PlatformDetailsModalScreen({ route, navigation }: Platfo
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+  },
+  card: {
+    flexDirection: 'column',
+    width: '100%',
+    alignItems: 'center',
   },
   logoContainer: {
-    marginBottom: 40
-  },
-  logo: {
-    width: '50%',
-    height: 150,
-    resizeMode: 'contain',
-    marginBottom: 40
-  },
-  button: {
-    marginVertical: 5
-  },
-  buttonsContainer: {
+    alignSelf: 'center',
     width: '60%',
-    margin: 40
+    padding: 20,
+    margin: 20,
+    borderWidth: 1,
+    borderRadius: 5
   },
-  listItemRow: {
-    flexDirection: 'row',
-    marginVertical: 5
-  },
-  listItemLabelContainer: {
-    flex: 1,
-    marginRight: 5,
-    alignItems: 'flex-end'
-  },
-  listItemValueContainer: {
-    flex: 1,
-    marginLeft: 5,
-    alignItems: 'flex-start'
+  cardActions: {
+    margin: 20
   }
 })

@@ -1,6 +1,7 @@
-import { SectionList, ListRenderItem, Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
+import { List } from 'react-native-paper'
 import { Platform } from '../../types/platforms/Platform'
-import { PlatformListItem } from './PlatformListItem'
+import { PlatformLogoImage } from './PlatformLogoImage'
 
 interface Props {
   platforms: Platform[] | undefined
@@ -10,30 +11,21 @@ interface Props {
 export const PlatformList = (props: Props) => {
   const { platforms, onPlatformPressed } = props
 
-  const renderPlatformMenuItem: ListRenderItem<Platform> = ({ item }: { item: Platform }) => {
-    return (
-      <PlatformListItem platform={item} onPressed={onPlatformPressed} />
-    )
-  }
-
   return (
     <>
       {platforms && platforms?.length > 0
-      ? <SectionList
-          sections={[{ title: 'Platforms', data: platforms.sort((a, b) => { 
-            if (a.name < b.name) {
-              return -1
-            }
-
-            if (a.name > b.name) {
-              return 1
-            }
-
-            return 0
-          })}]}
-          renderItem={renderPlatformMenuItem}
-          keyExtractor={item => item.igdbId.toString()}
-        />
+      ? <List.Section>
+          {platforms.map(platform => (
+            <List.Item
+              key={platforms.indexOf(platform)}
+              title={platform.name}
+              titleStyle={styles.listItemTitle}
+              left={() =>
+                <PlatformLogoImage platformLogoImgId={platform.logoImgId || ''} />}
+              onPress={() => onPlatformPressed && onPlatformPressed(platform)}
+            />
+          ))}
+        </List.Section>
       : <View style={styles.textContainer}>
           <Text>No Platforms.</Text>
         </View>
@@ -43,6 +35,9 @@ export const PlatformList = (props: Props) => {
 }
 
 const styles = StyleSheet.create({
+  listItemTitle: {
+    marginLeft: 20
+  },
   textContainer: {
     flex: 1,
     alignItems: 'center',

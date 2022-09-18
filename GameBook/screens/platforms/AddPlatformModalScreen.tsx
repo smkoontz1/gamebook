@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { ActivityIndicator, StyleSheet, View, Text, TextInput, NativeSyntheticEvent, TextInputSubmitEditingEventData, DrawerLayoutAndroidComponent } from 'react-native'
+import { ActivityIndicator, StyleSheet, View, Text, TextInput, NativeSyntheticEvent, TextInputSubmitEditingEventData, DrawerLayoutAndroidComponent, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { PlatformList } from '../../components/Platforms/PlatformList'
-import { useSearchPlatforms } from '../../hooks/igdb/useSearchPlatforms'
+import { useSearchPlatforms } from '../../hooks/igdb/platforms/useSearchPlatforms'
 import { StatusBar } from 'expo-status-bar'
 import { Alert, Platform as HostPlatform } from 'react-native'
 import { useMutation } from '@tanstack/react-query'
@@ -11,8 +11,9 @@ import { PlatformsScreenProps } from '../../types/navigation'
 import { LoadingSpinner } from '../../components/Common/LoadingSpinner'
 import { PlatformState } from '../../types/state/PlatformStore'
 import { usePlatformStore } from '../../hooks/stores/usePlatformStore'
-import colors from '../../constants/Colors'
+import Colors from '../../constants/Colors'
 import { FontAwesome } from '@expo/vector-icons'
+import { Searchbar } from 'react-native-paper'
 
 export default function AddPlatformModalScreen({ navigation }: PlatformsScreenProps<'AddPlatformModal'>) {
   const [searchText, setSearchText] = useState('')
@@ -56,26 +57,22 @@ export default function AddPlatformModalScreen({ navigation }: PlatformsScreenPr
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.inputContainer}>
-        <FontAwesome
-          name='search'
-          size={25}
-          color={'black'}
-          style={styles.searchIcon}
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={(t) => setSearchText(t)}
-          onSubmitEditing={(e) => setQueryText(e.nativeEvent.text)}
-          value={searchText}
-        />
-      </View>
+      <Searchbar
+        style={styles.searchbar}
+        placeholder='Search'
+        placeholderTextColor={'gray'}
+        onChangeText={(t) => setSearchText(t)}
+        onSubmitEditing={(e) => setQueryText(e.nativeEvent.text)}
+        value={searchText}
+      />
       {arePlatformsFetching
         ? <LoadingSpinner />
-        : <PlatformList
-            platforms={platforms}
-            onPlatformPressed={showAlert}
-          />
+        : <ScrollView>
+            <PlatformList
+              platforms={platforms}
+              onPlatformPressed={showAlert}
+            />
+          </ScrollView>
       }
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
@@ -88,24 +85,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: colors.appBackground
   },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  searchbar: {
     marginBottom: 20
-  },
-  searchIcon: {
-    flex: 1,
-  },
-  input: {
-    flex: 8,
-    height: 40,
-    width: '100%',
-    marginTop: 12,
-    marginBottom: 20,
-    backgroundColor: 'white',
-    borderRadius: 5,
-    padding: 10,
   }
 })

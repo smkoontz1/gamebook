@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { ACCESS_TOKEN, CLIENT_ID } from '../constants/TEMP'
-import { PlatformLogoResponse } from '../hooks/igdb/usePlatformLogos'
-import { PlatformResponse } from '../types/igdb/responses/PlatformResponse'
+import { ACCESS_TOKEN, CLIENT_ID, IGDB_API_BASE_URL } from '../../constants/TEMP'
+import { PlatformLogoResponse } from '../../types/igdb/responses/platforms/PlatformLogoResponse'
+import { PlatformResponse } from '../../types/igdb/responses/platforms/PlatformResponse'
 
 export async function getPlatforms(platformIdgbIds: number[]): Promise<PlatformResponse[]> {
   const QUERY_FIELDS = [
@@ -26,7 +26,7 @@ export async function getPlatforms(platformIdgbIds: number[]): Promise<PlatformR
     '/platforms',
     requestBody,
     {
-      baseURL: 'https://api.igdb.com/v4',
+      baseURL: IGDB_API_BASE_URL,
       headers: {
         'Authorization': `Bearer ${ACCESS_TOKEN}`,
         'Client-ID': CLIENT_ID
@@ -61,7 +61,7 @@ export async function getPlatformLogos(platformLogoIgdbIds: number[]): Promise<P
     '/platform_logos',
     requestBody,
     {
-      baseURL: 'https://api.igdb.com/v4',
+      baseURL: IGDB_API_BASE_URL,
       headers: {
         'Authorization': `Bearer ${ACCESS_TOKEN}`,
         'Client-ID': CLIENT_ID
@@ -75,14 +75,8 @@ export async function getPlatformLogos(platformLogoIgdbIds: number[]): Promise<P
 export async function searchPlatforms(searchText: string): Promise<PlatformResponse[]> {
   const QUERY_FIELDS = [
     'id',
-    'abbreviation',
-    'alternative_name',
-    'category',
-    'generation',
     'name',
-    'platform_logo',
-    'platform_family',
-    'slug'
+    'platform_logo'
   ]
 
   const requestBody = `
@@ -91,13 +85,11 @@ export async function searchPlatforms(searchText: string): Promise<PlatformRespo
     limit 20;
   `
 
-  console.log('Searching', requestBody)
-
   const response = await axios.post<PlatformResponse[]>(
     '/platforms',
     requestBody,
     {
-      baseURL: 'https://api.igdb.com/v4',
+      baseURL: IGDB_API_BASE_URL,
       headers: {
         'Authorization': `Bearer ${ACCESS_TOKEN}`,
         'Client-ID': CLIENT_ID

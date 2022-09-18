@@ -18,7 +18,10 @@ import PlatformsListScreen from '../screens/platforms/PlatformsListScreen';
 import PlatformDetailsModalScreen from '../screens/platforms/PlatformDetailsModalScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { PlatformsScreenProps, PlatformsStackParamList, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types/navigation';
-import LinkingConfiguration from './LinkingConfiguration';
+import LinkingConfiguration from './LinkingConfiguration'
+
+import PlatformsNavigator from './platforms/PlatformsStackNavigator'
+import GamesNavigator from './games/GamesStackNavigator'
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -40,6 +43,7 @@ function RootNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name='Root' component={BottomTabNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name='Games' component={GamesNavigator} />
       <Stack.Screen name='NotFound' component={NotFoundScreen} options={{ title: 'Oops!' }} />
     </Stack.Navigator>
   );
@@ -80,54 +84,6 @@ function RootNavigator() {
      </BottomTab.Navigator>
    );
  }
-
-const PlatformsStack = createNativeStackNavigator<PlatformsStackParamList>()
-
-function PlatformsNavigator() {
-  const colorScheme = useColorScheme()
-  
-  return (
-    <PlatformsStack.Navigator>
-      <PlatformsStack.Screen
-        name='PlatformsList'
-        component={PlatformsListScreen}
-        options={({ navigation }: PlatformsScreenProps<'PlatformsList'>) => ({
-          title: 'Platforms',
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('AddPlatformModal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name='plus'
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
-        })}
-      />
-      <PlatformsStack.Group screenOptions={{ presentation: 'modal' }}>
-        <PlatformsStack.Screen
-          name='PlatformDetailsModal'
-          component={PlatformDetailsModalScreen}
-          options={({ route }: PlatformsScreenProps<'PlatformDetailsModal'>) => ({
-            title: route.params.platform.name,
-          })}
-        />
-        <PlatformsStack.Screen
-          name='AddPlatformModal'
-          component={AddPlatformModalScreen}
-          options={() => ({
-            title: 'Add Platform'
-          })}
-        />
-      </PlatformsStack.Group>
-    </PlatformsStack.Navigator>
-  )
-}
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/

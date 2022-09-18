@@ -18,7 +18,8 @@ const linking: LinkingOptions<RootStackParamList> = {
           Platforms: {
             screens: {
               AddPlatformModal: 'add-platform',
-              PlatformDetailsModal: 'platform-details', 
+              PlatformsList: 'platforms',
+              PlatformDetailsModal: 'platform-details'
             },
           },
           TabTwo: {
@@ -29,6 +30,12 @@ const linking: LinkingOptions<RootStackParamList> = {
         },
       },
       NotFound: '*',
+      Games: {
+        screens: {
+          AddGameModal: 'add-game',
+          GamesList: 'games'
+        }
+      },
     },
   },
 };
