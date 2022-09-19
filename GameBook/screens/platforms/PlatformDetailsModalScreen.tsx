@@ -1,6 +1,6 @@
 import { PlatformDetailsModalScreenProps, PlatformsScreenProps } from '../../types/navigation'
 import { Alert, Platform as HostPlatform, StyleSheet, View, Text, Image, Pressable, FlatList, ListRenderItem } from 'react-native'
-import { getImageSize, getPlatformDetailsImgLogoUrl } from '../../helpers/imageHelpers'
+import { getPlatformDetailsImgLogoUrl } from '../../helpers/imageHelpers'
 import { Category, Platform } from '../../types/platforms/Platform'
 import { LabeledList } from '../../components/Common/LabeledList'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -10,6 +10,8 @@ import { usePlatformStore } from '../../hooks/stores/usePlatformStore'
 import { Button, Card, Paragraph } from 'react-native-paper'
 import { useState } from 'react'
 import { FontAwesome } from '@expo/vector-icons'
+import { StatusBar } from 'expo-status-bar'
+import { KeyValuePair } from '../../types/common/KeyValuePair'
 
 const getCategoryString = (category: Category) => {
   switch (category) {
@@ -30,14 +32,10 @@ const getCategoryString = (category: Category) => {
   }
 }
 
-interface KeyValuePair<TKey, TValue> {
-  key: TKey,
-  value: TValue
-}
-
 export default function PlatformDetailsModalScreen({ route, navigation }: PlatformDetailsModalScreenProps) {
   const { platform } = route.params
   const { details } = platform
+  const gameCount = usePlatformStore((state) => state.platformState.platforms.find(p => p.platformIgdbId === platform.igdbId))?.gameIgdbIds?.length || 0
   const { deletePlatform } = usePlatformStore()
    
   const removePlatformMutation = useMutation<PlatformState, unknown, number, unknown>(platformIgdbId => {
@@ -58,15 +56,12 @@ export default function PlatformDetailsModalScreen({ route, navigation }: Platfo
           style: 'destructive',
           onPress: async () => {
             removePlatformMutation.mutate(platform.igdbId)
-            navigation.navigate('PlatformsList')
+            navigation.goBack()
           }
         }
       ]
     )
   }
-  
-  // TODO
-  const gamesOwned = 24
   
   const keyValuePairs: KeyValuePair<string, string>[] = [
     {
@@ -79,13 +74,12 @@ export default function PlatformDetailsModalScreen({ route, navigation }: Platfo
     },
     {
       key: 'Games Owned',
-      value: gamesOwned.toString()
+      value: gameCount.toString()
     }
   
   ]
 
   const platformDetailsImgLogoUrl = getPlatformDetailsImgLogoUrl(platform.logoImgId || '')
-
   const [platformLogoDimensions, setPlatformLogoDimensions] = useState({ width: 1, height: 1 })
 
   platform.logoImgId && Image.getSize(
@@ -105,7 +99,7 @@ export default function PlatformDetailsModalScreen({ route, navigation }: Platfo
                   aspectRatio: platformLogoDimensions.width / platformLogoDimensions.height,
                   backgroundColor: 'white'
                 }}
-                source={{ uri: getPlatformDetailsImgLogoUrl(platform.logoImgId || '') }}
+                source={{ uri: platformDetailsImgLogoUrl }}
               />
             : <FontAwesome
                 name='gamepad'
@@ -141,14 +135,15 @@ export default function PlatformDetailsModalScreen({ route, navigation }: Platfo
           </Button>
         </Card.Actions>
       </Card>
+
+      <StatusBar style={HostPlatform.OS === 'ios' ? 'light' : 'auto'} />
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    marginHorizontal: 20
   },
   card: {
     flexDirection: 'column',

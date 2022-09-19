@@ -1,6 +1,11 @@
 
+export interface StoredPlatform {
+  platformIgdbId: number
+  gameIgdbIds: number[]
+}
+
 export interface PlatformState {
-  platformIgdbIds: number[]
+  platforms: StoredPlatform[]
 }
 
 export interface PlatformStore {
@@ -9,4 +14,6 @@ export interface PlatformStore {
   platformState: PlatformState,
   addPlatform: (newPlatformIgdbId: number) => Promise<PlatformState>
   deletePlatform: (platformIdbId: number) => Promise<PlatformState>
+  addGame: (newGameIgdbId: number, platformIgdbId: number) => Promise<PlatformState>
+  deleteGame: (gameIgdbId: number, platformIgdbId: number) => Promise<PlatformState>
 }

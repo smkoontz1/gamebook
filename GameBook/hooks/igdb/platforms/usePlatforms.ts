@@ -1,19 +1,21 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { Platform } from '../../../types/platforms/Platform'
 import { getPlatformLogos, getPlatforms } from '../../../igdb/api/platforms'
+import fp from 'lodash/fp'
 
 interface Props {
-  platformIdgbIds: number[]
+  platformIgdbIds: number[]
 }
 
 export const usePlatforms = (props: Props): UseQueryResult<Platform[]> => {
-  const { platformIdgbIds } = props
+  const { platformIgdbIds } = props
   
-  return useQuery(['platforms', platformIdgbIds], async (): Promise<Platform[]> => {
-    const platformResponses = await getPlatforms(platformIdgbIds)
-    const platformLogoResponses = await getPlatformLogos(platformResponses.map(pr => pr.platform_logo).filter(id => !!id))
+  return useQuery(['platforms', platformIgdbIds], async (): Promise<Platform[]> => {
+    const platformResponses = await getPlatforms(platformIgdbIds)
+    const platformLogoResponses
+      = await getPlatformLogos(platformResponses.map(pr => pr.platform_logo).filter(id => !!id))
 
-    return platformResponses.map(pr => {
+    const platforms: Platform[] = platformResponses.map(pr => {
       return {
         igdbId: pr.id,
         slug: pr.slug,
@@ -26,8 +28,10 @@ export const usePlatforms = (props: Props): UseQueryResult<Platform[]> => {
         }
       }
     })
+
+    return fp.sortBy('name', platforms)
   },
   {
-    enabled: platformIdgbIds?.length > 0
+    enabled: platformIgdbIds?.length > 0
   })
 }

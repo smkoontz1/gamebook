@@ -5,6 +5,7 @@ import { Title } from 'react-native-paper'
 import Colors from '../../constants/Colors'
 import useColorScheme from '../../hooks/useColorScheme'
 import AddGameModalScreen from '../../screens/games/AddGameModalScreen'
+import GameDetailsModalScreen from '../../screens/games/GameDetailsModalScreen'
 import GamesListScreen from '../../screens/games/GamesListScreen'
 import { GamesScreenProps, GamesStackParamList } from '../../types/navigation'
 
@@ -56,6 +57,13 @@ export default function GamesNavigator() {
               title: `Add ${platformName ? `${platformName} ` : ''}Game`
             }
           }}
+        />
+        <GamesStack.Screen
+          name='GameDetailsModal'
+          component={GameDetailsModalScreen}
+          options={({ route }: GamesScreenProps<'GameDetailsModal'>) => ({
+            title: route.params.game.name
+          })}
         />
       </GamesStack.Group>
     </GamesStack.Navigator>

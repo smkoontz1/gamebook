@@ -41,7 +41,7 @@ export default function PlatformsNavigator() {
           name='PlatformDetailsModal'
           component={PlatformDetailsModalScreen}
           options={({ route }: PlatformsScreenProps<'PlatformDetailsModal'>) => ({
-            title: route.params.platform.name,
+            title: route.params.platform.name
           })}
         />
         <PlatformsStack.Screen

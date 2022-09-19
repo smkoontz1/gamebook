@@ -10,8 +10,12 @@ export const getPlatformDetailsImgLogoUrl = (imgId: string) => {
   return `${IGDB_IMAGE_BASE_URL}/t_720p/${imgId}.png`
 }
 
-export const getGameCoverImageUrl = (imgId: string) => {
+export const getSmallGameCoverImageUrl = (imgId: string) => {
   return `${IGDB_IMAGE_BASE_URL}/t_cover_small/${imgId}.png`
+}
+
+export const getBigGameCoverImageUrl = (imgId: string) => {
+  return `${IGDB_IMAGE_BASE_URL}/t_cover_big/${imgId}.png`
 }
 
 /**

@@ -1,14 +1,14 @@
 import { Game } from '../../types/games/Game'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { List } from 'react-native-paper'
-import { getGameCoverImageUrl } from '../../helpers/imageHelpers'
+import { getSmallGameCoverImageUrl } from '../../helpers/imageHelpers'
 
 interface Props {
   games: Game[] | undefined
   onGamePressed?: (game: Game) => void
 }
 
-export const GameList = (props: Props) => {
+export const GamesList = (props: Props) => {
   const { games, onGamePressed } = props
 
   return (
@@ -24,7 +24,7 @@ export const GameList = (props: Props) => {
                 <Image
                   style={styles.cover}
                   source={{
-                    uri: getGameCoverImageUrl(game.coverImgId)
+                    uri: getSmallGameCoverImageUrl(game.coverImgId)
                   }}
                 />
               }

@@ -33,7 +33,8 @@ const linking: LinkingOptions<RootStackParamList> = {
       Games: {
         screens: {
           AddGameModal: 'add-game',
-          GamesList: 'games'
+          GamesList: 'games',
+          GameDetailsModal: 'game-details'
         }
       },
     },

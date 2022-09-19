@@ -3,7 +3,7 @@ import { ACCESS_TOKEN, CLIENT_ID, IGDB_API_BASE_URL } from '../../constants/TEMP
 import { PlatformLogoResponse } from '../../types/igdb/responses/platforms/PlatformLogoResponse'
 import { PlatformResponse } from '../../types/igdb/responses/platforms/PlatformResponse'
 
-export async function getPlatforms(platformIdgbIds: number[]): Promise<PlatformResponse[]> {
+export async function getPlatforms(platformIgdbIds: number[]): Promise<PlatformResponse[]> {
   const QUERY_FIELDS = [
     'id',
     'abbreviation',
@@ -19,7 +19,7 @@ export async function getPlatforms(platformIdgbIds: number[]): Promise<PlatformR
   
   const requestBody = `
     fields ${QUERY_FIELDS.join(',')};
-    where id = (${platformIdgbIds?.join(',')});
+    where id = (${platformIgdbIds?.join(',')});
   `
   
   const response = await axios.post<PlatformResponse[]>(
@@ -72,7 +72,7 @@ export async function getPlatformLogos(platformLogoIgdbIds: number[]): Promise<P
   return response?.data
 }
 
-export async function searchPlatforms(searchText: string): Promise<PlatformResponse[]> {
+export async function searchPlatforms(searchText: string): Promise<Partial<PlatformResponse>[]> {
   const QUERY_FIELDS = [
     'id',
     'name',
@@ -85,7 +85,7 @@ export async function searchPlatforms(searchText: string): Promise<PlatformRespo
     limit 20;
   `
 
-  const response = await axios.post<PlatformResponse[]>(
+  const response = await axios.post<Partial<PlatformResponse>[]>(
     '/platforms',
     requestBody,
     {

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ActivityIndicator, StyleSheet, View, Text, TextInput, NativeSyntheticEvent, TextInputSubmitEditingEventData, DrawerLayoutAndroidComponent, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { PlatformList } from '../../components/Platforms/PlatformList'
+import { PlatformsList } from '../../components/Platforms/PlatformList'
 import { useSearchPlatforms } from '../../hooks/igdb/platforms/useSearchPlatforms'
 import { StatusBar } from 'expo-status-bar'
 import { Alert, Platform as HostPlatform } from 'react-native'
@@ -68,7 +68,7 @@ export default function AddPlatformModalScreen({ navigation }: PlatformsScreenPr
       {arePlatformsFetching
         ? <LoadingSpinner />
         : <ScrollView>
-            <PlatformList
+            <PlatformsList
               platforms={platforms}
               onPlatformPressed={showAlert}
             />

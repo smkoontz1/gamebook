@@ -8,7 +8,7 @@ interface Props {
   onPlatformPressed?: (platform: Platform) => void
 }
 
-export const PlatformList = (props: Props) => {
+export const PlatformsList = (props: Props) => {
   const { platforms, onPlatformPressed } = props
 
   return (

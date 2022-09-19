@@ -6,6 +6,7 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Game } from '../games/Game';
 import { Platform } from '../platforms/Platform';
 
 declare global {
@@ -35,6 +36,11 @@ export type GamesStackParamList = {
     platformIgdbId?: number
     platformSlug: string
     platformName?: string
+  },
+  GameDetailsModal: {
+    game: Game
+    platformIgdbId: number
+    platformName: string
   }
   AddGameModal: {
     platformIgdbId?: number
@@ -59,20 +65,10 @@ export type PlatformsScreenProps<Screen extends keyof PlatformsStackParamList> =
   Screen
 >
 
-// export type PlatformDetailsModalScreenProps = NativeStackScreenProps<
-//   PlatformsStackParamList,
-//   'PlatformDetailsModal'
-// >
-
 export type PlatformDetailsModalScreenProps = CompositeScreenProps<
   NativeStackScreenProps<PlatformsStackParamList, 'PlatformDetailsModal'>,
   NativeStackScreenProps<RootStackParamList, 'Games'>
 >
-
-// export type PlatformsScreenProps<Screen extends keyof PlatformsStackParamList> = CompositeScreenProps<
-//   NativeStackScreenProps<PlatformsStackParamList, Screen>,
-//   GamesScreenProps<GamesStackParamList>
-// >
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<
   BottomTabScreenProps<RootTabParamList, Screen>,
