@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { GamesScreenProps } from '../../types/navigation'
 import { usePlatformStore } from '../../hooks/stores/usePlatformStore'
@@ -22,10 +22,12 @@ export default function GamesListScreen({ route, navigation }: GamesScreenProps<
     <SafeAreaView style={styles.container}>
       {areGamesFetching
         ? <LoadingSpinner />
-        : <GamesList
-            games={games}
-            onGamePressed={(game) => navigation.navigate('GameDetailsModal', { game, platformIgdbId, platformName })}
-          />
+        : <ScrollView>
+            <GamesList
+              games={games}
+              onGamePressed={(game) => navigation.navigate('GameDetailsModal', { game, platformIgdbId, platformName })}
+            />
+          </ScrollView> 
       }
     </SafeAreaView>
   )

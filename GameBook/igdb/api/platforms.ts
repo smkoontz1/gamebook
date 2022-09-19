@@ -20,6 +20,7 @@ export async function getPlatforms(platformIgdbIds: number[]): Promise<PlatformR
   const requestBody = `
     fields ${QUERY_FIELDS.join(',')};
     where id = (${platformIgdbIds?.join(',')});
+    limit 20;
   `
   
   const response = await axios.post<PlatformResponse[]>(
@@ -55,6 +56,7 @@ export async function getPlatformLogos(platformLogoIgdbIds: number[]): Promise<P
   const requestBody = `
     fields ${QUERY_FIELDS.join(',')};
     where id = (${platformLogoIgdbIds.join(',')});
+    limit 20;
   `
 
   const response = await axios.post<PlatformLogoResponse[]>(

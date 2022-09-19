@@ -24,9 +24,8 @@ export async function getGames(gameIgdbIds: number[]): Promise<GameResponse[]> {
   const requestBody = `
     fields ${QUERY_FIELDS.join(',')};
     where id = (${gameIgdbIds?.join(',')});
+    limit 500;
   `
-
-  console.log('Get games request', requestBody)
 
   const response = await axios.post<GameResponse[]>(
     '/games',
@@ -61,6 +60,7 @@ export async function getGameCovers(gameCoverIgdbIds: number[]): Promise<GameCov
   const requestBody = `
     fields ${QUERY_FIELDS.join(',')};
     where game = (${gameCoverIgdbIds.join(',')});
+    limit 500;
   `
 
   const response = await axios.post<GameCoverResponse[]>(

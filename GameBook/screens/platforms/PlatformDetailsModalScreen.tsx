@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   cardActions: {
-    margin: 20
+    alignSelf: 'center',
+    marginVertical: 20
   }
 })
